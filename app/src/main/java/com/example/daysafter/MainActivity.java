@@ -2,12 +2,17 @@ package com.example.daysafter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.example.daysafter.Database.DatabaseOperations;
@@ -82,6 +87,8 @@ public class MainActivity extends AppCompatActivity
 
         String sDaysAndMonthsMessage = godCLass.generateDayAndMonthDifference(dateCurrentDate, dateTargetDate);
         objResultView.setText(sDaysAndMonthsMessage);
+        Context context = this;
+        updateWidget(context);
     }
 
     private void saveTargetedDay(String sTargetedDay)
@@ -92,5 +99,16 @@ public class MainActivity extends AppCompatActivity
     private void deleteAllDays()
     {
         Days day = databaseOperator.deleteAllDays();
+    }
+
+    private void updateWidget(Context context)
+    {
+//        AppWidgetManager awmWidgetManager = AppWidgetManager.getInstance(context);
+//        awmWidgetManager.updateAppWidget(new ComponentName(this.getPackageName(), DaysAfterWidget.class.getName()), views);
+        Intent intent = new Intent(context, DaysAfterWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), DaysAfterWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 }
