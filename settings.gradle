@@ -1,0 +1,2 @@
+rootProject.name='DaysAfter'
+include ':app'
